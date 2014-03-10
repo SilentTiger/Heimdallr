@@ -19,6 +19,7 @@
   <ItemGroup>
     <Content Include="package.json" />
     <Compile Include="app.js" />
+    <Compile Include="Monitor\Client.js" />
     <Compile Include="Monitor\monitor.js" />
     <Compile Include="WebServer\webServer.js" />
     <Content Include="WebServer\public\index.html" />

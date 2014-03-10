@@ -1,6 +1,8 @@
 var WebSocketServer = require('websocket').server,
     http = require('http');
 
+var clientsArray = new Array();
+
 var startMonitor = (function() {
 	var serverStarted = false;
 	return function() {
@@ -15,10 +17,10 @@ var startMonitor = (function() {
 			autoAcceptConnections : true
 		});
 
-		wsServer.on('request', function(request) {
-			console.log(new Date(), request);
-		});
-	}
+        wsServer.on('request', function(request) {
+            console.log(new Date() - 0, request);
+        });
+    }
 
 })();
 

@@ -1,4 +1,5 @@
-var WebSocketServer = require('websocket').server, http = require('http');
+var WebSocketServer = require('websocket').server,
+    http = require('http');
 
 var startMonitor = (function() {
 	var serverStarted = false;

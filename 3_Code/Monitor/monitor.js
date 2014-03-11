@@ -26,14 +26,16 @@ var Monitor = (function(){
             var client = new Client(connection);
             client.addEventListener('message', onMessage);
             client.addEventListener('close', onClose);
-            
-            clientsArray.push(client);
         });
 	};
 	
 	function onMessage(sender, msg){
 		var now = new Date();
 		console.log("new message from " + sender.conn.remoteAddress + " at " + now.toString() + " | " + (now - 0), msg);
+		
+		if (typeof Monitor[msg.cmd] === 'function') {
+			Monitor[msg.cmd].apply(sender, msg.data);
+		}
 	}
 	
 	function onClose(sender, reasonCode, desc){
@@ -41,7 +43,13 @@ var Monitor = (function(){
 		console.log("socket close from " + sender.conn.remoteAddress + " at " + now.toString() + " | " + (now - 0), reasonCode, desc);
 	}
 
-	function addMonitUnit(){
+	function addMonitUnit(client, data){
+		if(client.listened){return;}
+		client.listened = true;
+		clientsArray.push(client);
+	};
+	function removeMonitUnit(client, data){
+		//TO DO
 	};
 	
 	return {

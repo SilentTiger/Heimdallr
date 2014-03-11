@@ -1,6 +1,7 @@
 ﻿function Client(con){
 	this.conn = con;
 	this.requirements = [];
+	this.listened = false;
 	this._eventHandles = {};
 	if(typeof this.send === "undefined"){
 		Client.prototype.send = function(msg){
@@ -34,7 +35,7 @@
 		}
 	}
 	var _self = this;
-	this.conn.on("message", function(message){_self.triggerEvent('message', [_self, message]);});
+	this.conn.on("message", function(message){_self.triggerEvent('message', [_self, JSON.parse(message.utf8Data)]);});
 	this.conn.on("close", function(reasonCode, description){_self.triggerEvent('close', [_self, reasonCode, description]);});
 	this.conn.on("error", function(error){
 		var now = new Date();

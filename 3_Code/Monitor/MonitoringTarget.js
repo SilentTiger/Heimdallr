@@ -1,15 +1,14 @@
 var os = require('os');
 
+var getFreeMemoryTotal = function(){
+    this.data = os.freemem();
+};
 
 function MonitoringTarget(id){
 	this.id = id;
     this.listener = "";
     this.data = "";
-    if(typeof this.refresh === "undefined"){
-        MonitoringTarget.prototype.refresh = function(){
-            this.data = os.freemem();
-        }
-    }
+    this.refresh = getFreeMemoryTotal;
 }
 
 exports.MonitoringTarget = MonitoringTarget;

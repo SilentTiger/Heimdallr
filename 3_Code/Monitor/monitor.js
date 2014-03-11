@@ -12,9 +12,16 @@ var Monitor = (function(){
 	var timerRefresh = setInterval(function(){
 		for(var i in monitoringTargets){
 			monitoringTargets[i].refresh();
-			for(var j = 0, l = clientsArray.length; j < l; j++){
-				clientsArray[j].send(monitoringTargets[i].data);
+		}
+	}, interval);
+
+	var timerSend = setInterval(function(){
+		for(var j = 0, l = clientsArray.length; j < l; j++){
+			var data = [];
+			for(var i = 0, l = clientsArray[j].targets.length; i < l; i++){
+				data.push({id: clientsArray[j].targets[i], data: monitoringTargets[clientsArray[j].targets[i]].data});
 			}
+			clientsArray[j].send(data);
 		}
 	}, interval);
 	
@@ -62,7 +69,8 @@ var Monitor = (function(){
 		if(!monitoringTargets[data.id]) {
 			monitoringTargets[data.id] = new MonitoringTarget(data.id);
 		}
-		monitoringTargets[data.id].listener += ";";
+		monitoringTargets[data.id].listener += client.id + ";";
+		client.addTarget(data.id);
 	};
 	function removeMonitUnit(client, data){
 		//TO DO

@@ -11,6 +11,7 @@
     <script src="http://cdn.bootcss.com/bootstrap/3.1.1/js/bootstrap.js"></script>
     <script type="text/javascript">
     var ws = new WebSocket("ws://10.51.5.77:8080");
+    ws.onmessage = function(msg){console.log(msg)};
     </script>
 </body>
 </html>

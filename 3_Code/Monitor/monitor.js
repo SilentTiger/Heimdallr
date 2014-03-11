@@ -1,12 +1,23 @@
 var WebSocketServer = require('websocket').server,
     http = require('http'),
-    Client = require('./Client.js').Client;
+    Client = require('./Client.js').Client,
+    MonitoringTarget = require('./MonitoringTarget.js').MonitoringTarget;
 
 var Monitor = (function(){
 	var serverStarted = false;
 	var clientsArray = new Array();
 	var interval = 1000;
+	var monitoringTargets = {};
 
+	var timerRefresh = setInterval(function(){
+		for(var i in monitoringTargets){
+			monitoringTargets[i].refresh();
+			for(var j = 0, l = clientsArray.length; j < l; j++){
+				clientsArray[j].send(monitoringTargets[i].data);
+			}
+		}
+	}, interval);
+	
 	function startMonitor(port) {
 		if (serverStarted) {return;}
 		serverStarted = true;
@@ -34,7 +45,7 @@ var Monitor = (function(){
 		console.log("new message from " + sender.conn.remoteAddress + " at " + now.toString() + " | " + (now - 0), msg);
 		
 		if (typeof Monitor[msg.cmd] === 'function') {
-			Monitor[msg.cmd].apply(sender, msg.data);
+			Monitor[msg.cmd].apply(Monitor, [sender, msg.data]);
 		}
 	}
 	
@@ -43,10 +54,15 @@ var Monitor = (function(){
 		console.log("socket close from " + sender.conn.remoteAddress + " at " + now.toString() + " | " + (now - 0), reasonCode, desc);
 	}
 
-	function addMonitUnit(client, data){
+	function addMonitoringTarget(client, data){
 		if(client.listened){return;}
 		client.listened = true;
 		clientsArray.push(client);
+		
+		if(!monitoringTargets[data.id]) {
+			monitoringTargets[data.id] = new MonitoringTarget(data.id);
+		}
+		monitoringTargets[data.id].listener += ";";
 	};
 	function removeMonitUnit(client, data){
 		//TO DO
@@ -54,7 +70,7 @@ var Monitor = (function(){
 	
 	return {
 		start: startMonitor,
-		addMonitUnit:addMonitUnit
+		addMonitoringTarget: addMonitoringTarget
 	};
 })();
 

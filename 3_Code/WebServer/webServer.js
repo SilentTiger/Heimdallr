@@ -2,10 +2,10 @@ var express = require("express");
 
 var startWebServer = (function(){
 	var serverStarted = false;
-	return function(){
+	return function(port){
 		if(serverStarted) {return;}
 		serverStarted = true;
-		
+
 		var app = express();
 		app.use(express.bodyParser());
 	
@@ -15,9 +15,9 @@ var startWebServer = (function(){
 			app.use(express.static(__dirname + '/public'));
 		});
 	
-		app.listen(8685);
+		app.listen(port);
 	}
 
 })();
 
-exports.run = startWebServer;
+exports.start = startWebServer;

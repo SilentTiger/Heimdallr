@@ -10,10 +10,10 @@
     <script src="http://cdn.bootcss.com/jquery/2.0.3/jquery.min.js"></script>
     <script src="http://cdn.bootcss.com/bootstrap/3.1.1/js/bootstrap.js"></script>
     <script type="text/javascript">
-    var ws = new WebSocket("ws://10.51.5.77:8080");
+    var ws = new WebSocket("ws://10.51.5.43:8080");
     ws.onmessage = function(msg){console.log(msg)};
     ws.onopen = function(){
-    	ws.send(JSON.stringify({cmd:'addMonitoringTarget', data:{id: 'ramtotal', type: 'ram', arg: 'total', interval: 5000}}));
+    	ws.send(JSON.stringify({cmd:'addMonitoringTarget', data:{id: '1017', interval: 5}}));
     	//ws.send(JSON.stringify({cmd:'removeMonitoringTarget', data:{id: 'ramtotal'}}));
     }
     </script>

@@ -1,9 +1,8 @@
 ﻿function Client(con) {
 	this.id = guid();
 	this.conn = con;
-	this.listened = false;
 	this._eventHandles = {};
-	this.targets = [];
+	this.intervalList = {};
 	if (typeof this.send === "undefined") {
 		Client.prototype.send = function(msg) {
 			this.conn.send(msg);

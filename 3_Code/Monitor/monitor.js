@@ -5,24 +5,16 @@ var WebSocketServer = require('websocket').server,
 
 var Monitor = (function(){
 	var serverStarted = false;
-	var clientsArray = new Array();
 	var interval = 1000;
 	var monitoringTargets = {};
-
+	var tock = 0;
+	
 	var timerRefresh = setInterval(function(){
 		for(var i in monitoringTargets){
-			monitoringTargets[i].refresh();
+			monitoringTargets[i].tick(tock);
 		}
-	}, interval);
-
-	var timerSend = setInterval(function(){
-		for(var j = 0, l = clientsArray.length; j < l; j++){
-			var data = [];
-			for(var i = 0, l = clientsArray[j].targets.length; i < l; i++){
-				data.push({id: clientsArray[j].targets[i], data: monitoringTargets[clientsArray[j].targets[i]].data});
-			}
-			clientsArray[j].send(data);
-		}
+		tock++;
+		console.log(tock, new Date() - 0);
 	}, interval);
 	
 	function startMonitor(port) {
@@ -39,7 +31,7 @@ var Monitor = (function(){
 
         wsServer.on('connect', function(connection) {
         	var now = new Date();
-            console.log("new connection from " + connection.remoteAddress + " at " + now.toString() + " | " + (now - 0), connection);
+            console.log("new connection from " + connection.remoteAddress + " at " + now.toString() + " | " + (now - 0));
 
             var client = new Client(connection);
             client.addEventListener('message', onMessage);
@@ -62,15 +54,12 @@ var Monitor = (function(){
 	}
 
 	function addMonitoringTarget(client, data){
-		if(client.listened){return;}
-		client.listened = true;
-		clientsArray.push(client);
+		client.intervalList[data.id] = data.interval;
 		
 		if(!monitoringTargets[data.id]) {
 			monitoringTargets[data.id] = new MonitoringTarget(data.id);
 		}
-		monitoringTargets[data.id].listener += client.id + ";";
-		client.addTarget(data.id);
+		monitoringTargets[data.id].addListener(client, data.interval);
 	};
 	function removeMonitUnit(client, data){
 		//TO DO

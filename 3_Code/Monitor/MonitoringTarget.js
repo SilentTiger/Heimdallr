@@ -66,11 +66,11 @@ function MonitoringTarget(id) {
 		MonitoringTarget.prototype.refreshCallback = function(error, stdout, stderr, tock) {
 			if(error){console.log("monitoring target error: id[" + this.id + "]  cmd[" + this.cmd + "]" + (new Date() - 0));}
 			if(stderr){console.log("monitoring target stderr: id[" + this.id + "]  cmd[" + this.cmd + "]" + (new Date() - 0));}
-			
-			var data = this.formateData(stdout);
+
+			var msg = JSON.stringify({id: this.id, data: this.formateData(stdout), time: new Date()});
 			for(var i = 0, l = this.listener.length; i < l; i++){
 				if (tock % this.listener[i].intervalList[this.id] !== 0) continue;
-				this.listener[i].send(data);
+				this.listener[i].send(msg);
 			}
 		};
 		MonitoringTarget.prototype.tick = function(tock) {

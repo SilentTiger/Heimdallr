@@ -9,13 +9,20 @@ var Monitor = (function(){
 	var monitoringTargets = {};
 	var tock = 0;
 	
-	var timerRefresh = setInterval(function(){
+	var startTime = new Date() - 0;
+	function startClock(){
 		for(var i in monitoringTargets){
 			monitoringTargets[i].tick(tock);
 		}
 		tock++;
-		console.log(tock, new Date() - 0);
-	}, interval);
+		var delay = startTime + interval * tock - new Date();
+		while(delay <= 0){
+			tock++;
+			delay = startTime + interval * tock - new Date();
+		}
+		setTimeout(startClock, delay);
+	}
+	
 	
 	function startMonitor(port) {
 		if (serverStarted) {return;}
@@ -37,6 +44,8 @@ var Monitor = (function(){
             client.addEventListener('message', onMessage);
             client.addEventListener('close', onClose);
         });
+        
+        startClock();
 	};
 	
 	function onMessage(sender, msg){
@@ -59,9 +68,9 @@ var Monitor = (function(){
 		if(!monitoringTargets[data.id]) {
 			monitoringTargets[data.id] = new MonitoringTarget(data.id);
 		}
-		monitoringTargets[data.id].addListener(client, data.interval);
+		monitoringTargets[data.id].addListener(client);
 	};
-	function removeMonitUnit(client, data){
+	function removeMonitoringTarget(client, data){
 		//TO DO
 	};
 	

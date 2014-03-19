@@ -7,18 +7,6 @@
 		Client.prototype.send = function(msg) {
 			this.conn.send(msg);
 		};
-		Client.prototype.addTarget = function(id){
-			this.targets.push(id);
-		};
-		Client.prototype.removeTarget = function(id){
-			for(var i = 0, l = this.targets.length; i < l; i++){
-				if(this.targets[i] === id){
-					this.targets.splice(i, 1);
-					return;
-				}
-			}
-		};
-
 		Client.prototype.addEventListener = function(event, callback) {
 			if (typeof callback !== 'function') {
 				throw new Error('the callback argument is not a function');

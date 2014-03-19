@@ -13,7 +13,7 @@
     var ws = new WebSocket("ws://10.51.5.43:8080");
     ws.onmessage = function(msg){console.log(msg)};
     ws.onopen = function(){
-    	ws.send(JSON.stringify({cmd:'addMonitoringTarget', data:{id: '1017', interval: 5}}));
+    	ws.send(JSON.stringify({cmd:'addMonitoringTarget', data:{id: '1195', interval: 5}}));
     	//ws.send(JSON.stringify({cmd:'removeMonitoringTarget', data:{id: 'ramtotal'}}));
     }
     </script>

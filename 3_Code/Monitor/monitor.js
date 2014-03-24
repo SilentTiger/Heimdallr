@@ -9,7 +9,7 @@ var Monitor = (function(){
 	var monitoringTargets = {};
 	var tock = 0;
 	
-	var startTime = new Date() - 0;
+	var startTime;
 	function startClock(){
 		for(var i in monitoringTargets){
 			monitoringTargets[i].tick(tock);
@@ -44,7 +44,7 @@ var Monitor = (function(){
             client.addEventListener('message', onMessage);
             client.addEventListener('close', onClose);
         });
-        
+        startTime = new Date() - 0;
         startClock();
 	};
 	
@@ -60,6 +60,7 @@ var Monitor = (function(){
 	function onClose(sender, reasonCode, desc){
 		var now = new Date();
 		console.log("socket close from " + sender.conn.remoteAddress + " at " + now.toString() + " | " + (now - 0), reasonCode, desc);
+		Monitor.removeMonitoringTarget(sender, {id:"all"});
 	}
 
 	function addMonitoringTarget(client, data){
@@ -71,12 +72,17 @@ var Monitor = (function(){
 		monitoringTargets[data.id].addListener(client);
 	};
 	function removeMonitoringTarget(client, data){
-		//TO DO
+		for(var mT in monitoringTargets){
+			if(mT === data.id || data.id === "all"){
+				monitoringTargets[mT].removeListener(client);
+			}
+		}
 	};
 	
 	return {
 		start: startMonitor,
-		addMonitoringTarget: addMonitoringTarget
+		addMonitoringTarget: addMonitoringTarget,
+		removeMonitoringTarget: removeMonitoringTarget
 	};
 })();
 

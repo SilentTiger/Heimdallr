@@ -35,11 +35,14 @@ function MonitoringTarget(id) {
 			}
 		};
 		MonitoringTarget.prototype.removeListener = function(client) {
+			var findClient = false;
 			for(var i = this.listener.length - 1; i >= 0; i--){
 				if(this.listener[i].id === client.id){
 					this.listener.splice(i, 1);
+					findClient = true;
 				}
 			}
+			if(!findClient){return}
 			
 			//重新计算最大公约数
 			var intervals = [];

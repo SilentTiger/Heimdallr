@@ -6,38 +6,41 @@
     <link href="./css/jquery.gridster.css" rel="stylesheet">
     <style type="text/css">
         @font-face {
-          font-family: "helvetica-neue-ultra-light";
-          src: url("./font/helvetica-neue-lt-com-25-ultra-light.ttf")
+            font-family: "Walkway-SemiBold";
+            src: url("./font/Walkway SemiBold.ttf");
         }
-        body,html{height: 100%;width: 100%;font:400 18px "helvetica-neue-ultra-light", 'Century Gothic', Helvetica, Arial, sans-serif;}
-        header{height:32px;line-height: 32px;vertical-align: middle;font-size: 32px;background-color: yellow}
-        #btnAddWidget{padding: 0;border-width: 0;float: right;width:30px;height: 30px;margin-top: 1px;
-            color: rgb(0,122,255);
-            cursor: default;}
+        body,html{height: 100%;width: 100%;font:400 34px "Walkway-SemiBold", 'Century Gothic', Helvetica, Arial, sans-serif;}
+        .header {height: 52px;background: linear-gradient(to bottom, #d7d7d7 0%, #f7f7f7 100%);}
+        header{display: inline;font-size: 52px;}
+        #btnAddWidget{float: right;width:33px;height: 33px;margin-top: 8px; stroke: rgb(0,122,255); cursor: default;stroke-width: 2}
     </style>
 </head>
 <body>
-    <header>Heimdallr
-        <button id="btnAddWidget" title="New">New</button>
-    </header>
-    <input type="text" id="pid"/>
-    <input type="text" id="interval"/>
-    <input type="button" value="start" onclick="startListen()"/>
-    <input type="button" value="stop" onclick="stopListen()"/>
-    
+    <div class="header">
+        <header>Heimdallr</header>
+        <svg id="btnAddWidget" title="New widget">
+            <line x1="16" y1="2" x2="16" y2="30" />
+            <line x1="2" y1="16" x2="30" y2="16" />
+        </svg>
+    </div>
+    <input type="text" id="pid" />
+    <input type="text" id="interval" />
+    <input type="button" value="start" onclick="startListen()" />
+    <input type="button" value="stop" onclick="stopListen()" />
+
     <script src="./js/jquery-2.1.0.min.js"></script>
     <script src="./js/jquery.gridster.js"></script>
     <script type="text/javascript">
-    var ws = new WebSocket("ws://10.50.141.116:8080");
-    ws.onmessage = function(msg){console.log(msg)};
+        var ws = new WebSocket("ws://10.50.141.116:8080");
+        ws.onmessage = function (msg) { console.log(msg) };
 
-    function startListen(){
-        ws.send(JSON.stringify({cmd:'addMonitoringTarget', data:{id: pid.value, interval: parseInt(interval.value)}}));
-    }
+        function startListen() {
+            ws.send(JSON.stringify({ cmd: 'addMonitoringTarget', data: { id: pid.value, interval: parseInt(interval.value) } }));
+        }
 
-    function stopListen(){
-        ws.send(JSON.stringify({cmd:'removeMonitoringTarget', data:{id: pid.value}}));
-    }
+        function stopListen() {
+            ws.send(JSON.stringify({ cmd: 'removeMonitoringTarget', data: { id: pid.value } }));
+        }
     </script>
 </body>
 </html>

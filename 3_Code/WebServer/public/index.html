@@ -2,16 +2,31 @@
 <html>
 <head>
     <title>Heimdallr</title>
-    <link href="http://cdn.bootcss.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+    <link href="./css/normalize.css" rel="stylesheet">
+    <link href="./css/jquery.gridster.css" rel="stylesheet">
+    <style type="text/css">
+        @font-face {
+          font-family: "helvetica-neue-ultra-light";
+          src: url("./font/helvetica-neue-lt-com-25-ultra-light.ttf")
+        }
+        body,html{height: 100%;width: 100%;font:400 18px "helvetica-neue-ultra-light", 'Century Gothic', Helvetica, Arial, sans-serif;}
+        header{height:32px;line-height: 32px;vertical-align: middle;font-size: 32px;background-color: yellow}
+        #btnAddWidget{padding: 0;border-width: 0;float: right;width:30px;height: 30px;margin-top: 1px;
+            color: rgb(0,122,255);
+            cursor: default;}
+    </style>
 </head>
 <body>
+    <header>Heimdallr
+        <button id="btnAddWidget" title="New">New</button>
+    </header>
     <input type="text" id="pid"/>
     <input type="text" id="interval"/>
     <input type="button" value="start" onclick="startListen()"/>
     <input type="button" value="stop" onclick="stopListen()"/>
     
-    <script src="http://cdn.bootcss.com/jquery/2.0.3/jquery.min.js"></script>
-    <script src="http://cdn.bootcss.com/bootstrap/3.1.1/js/bootstrap.js"></script>
+    <script src="./js/jquery-2.1.0.min.js"></script>
+    <script src="./js/jquery.gridster.js"></script>
     <script type="text/javascript">
     var ws = new WebSocket("ws://10.50.141.116:8080");
     ws.onmessage = function(msg){console.log(msg)};

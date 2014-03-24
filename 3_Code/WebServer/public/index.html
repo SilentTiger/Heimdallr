@@ -1,21 +1,35 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Heimdallr</title>
     <link href="./css/normalize.css" rel="stylesheet">
     <link href="./css/jquery.gridster.css" rel="stylesheet">
     <style type="text/css">
         @font-face { font-family: "Walkway-SemiBold"; src: url("./font/Walkway SemiBold.ttf"); }
-        body, html { height: 100%; width: 100%; font: 400 34px "Walkway-SemiBold", 'Century Gothic', Helvetica, Arial, sans-serif; }
-        .header { height: 52px; background: linear-gradient(to bottom, #d7d7d7 0%, #f7f7f7 100%); }
+        body, html { height: 100%; width: 100%; overflow:hidden; font: 400 34px "Walkway-SemiBold", 'Century Gothic', Helvetica, Arial, sans-serif; }
+        .header { height: 52px; background: linear-gradient(to bottom, #d7d7d7 0, #f7f7f7 100%); }
         header { display: inline; font-size: 52px; }
         #btnAddWidget { float: right; width: 33px; height: 33px; margin-top: 8px; stroke: #007aff; cursor: default; stroke-width: 2; }
+    </style>
+    <style type="text/css">
+        .dialog { position: fixed; width: 600px; height: 480px; background-color:#FFF; top: 100%; left: calc(50% - 300px); transition: top ease-out 0.3s; }
+        .dialog_title_bar { height: 40px; border-bottom: 1px solid #8E8E93; text-align:center}
+        .dialog_title_bar .dialog_title_text { font-weight:900; font-size:36px; }
+        .dialog_title_bar .dialog_title_button { line-height: 40px; color: #C7C7CC; cursor: default; transition:color linear 0.15s}
+        .dialog_title_bar .dialog_title_button:hover { color: #007AFF; }
+        .dialog_title_bar .dialog_title_button_active { color: #007AFF; }
+        .dialog_title_bar .dialog_title_button_left { float: left; }
+        .dialog_title_bar .dialog_title_button_right { float: right; }
+        
+        .common_mask { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0); transition: background-color linear 0.3s; }
     </style>
 </head>
 <body>
     <div class="header">
         <header>Heimdallr</header>
-        <svg id="btnAddWidget" title="New widget">
+        <svg id="btnAddWidget">
             <line x1="16" y1="2" x2="16" y2="30" />
             <line x1="2" y1="16" x2="30" y2="16" />
         </svg>
@@ -25,9 +39,24 @@
     <input type="button" value="start" onclick="startListen()" />
     <input type="button" value="stop" onclick="stopListen()" />
 
-    <script src="./js/jquery-2.1.0.min.js"></script>
-    <script src="./js/jquery.gridster.js"></script>
+    
+
+    <script src="js/jquery-2.1.0.min.js"></script>
+    <script src="js/jquery.gridster.js"></script>
+    <script src="js/common.js"></script>
     <script type="text/javascript">
+        $("#btnAddWidget").bind("click", function () {
+            if (!ShowMask()) return;
+            var dialog = $('<div class="dialog"><div class="dialog_title_bar"><span class="dialog_title_button dialog_title_button_left">Cancel</span><span class="dialog_title_text">Add Monitoring</span><span class="dialog_title_button dialog_title_button_active dialog_title_button_right">Finish</span></div></div>');
+            $(document.body).append(dialog);
+            setTimeout(function () { dialog.css("top", "calc(50% - 240px)"); }, 1);
+            dialog.find(".dialog_title_button").eq(0).bind("click", function () {
+                dialog.css("top", "");
+                HideMask();
+                setTimeout(function () { dialog.remove(); }, 300);
+            });
+        });
+
         var ws = new WebSocket("ws://10.50.141.116:8080");
         ws.onmessage = function (msg) { console.log(msg) };
 

@@ -21,13 +21,26 @@
     <Compile Include="app.js" />
     <Compile Include="Monitor\Client.js" />
     <Compile Include="Monitor\monitor.js" />
+    <Compile Include="Monitor\MonitoringTarget.js" />
+    <Compile Include="WebServer\public\js\common.js" />
+    <Compile Include="WebServer\public\js\jquery-2.1.0.min.js" />
+    <Compile Include="WebServer\public\js\jquery.gridster.js" />
     <Compile Include="WebServer\webServer.js" />
+    <Content Include="WebServer\public\css\jquery.gridster.css" />
+    <Content Include="WebServer\public\css\normalize.css" />
+    <Content Include="WebServer\public\font\helvetica-neue-lt-com-25-ultra-light.ttf" />
+    <Content Include="WebServer\public\font\Walkway Black.ttf" />
+    <Content Include="WebServer\public\font\Walkway Bold.ttf" />
+    <Content Include="WebServer\public\font\Walkway SemiBold.ttf" />
     <Content Include="WebServer\public\index.html" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Monitor" />
     <Folder Include="WebServer" />
     <Folder Include="WebServer\public" />
+    <Folder Include="WebServer\public\css\" />
+    <Folder Include="WebServer\public\font\" />
+    <Folder Include="WebServer\public\js\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <Import Project="$(VSToolsPath)\Node.js Tools\Microsoft.NodejsTools.targets" />

@@ -1,6 +1,6 @@
 ﻿$axure.loadCurrentPage({
   "url":"home.html",
-  "generationDate":new Date(1395903234188.6),
+  "generationDate":new Date(1395910585409.82),
   "isCanvasEnabled":false,
   "variables":["OnLoadVariable"],
   "page":{
@@ -58,7 +58,7 @@
             "normal~":"images/home/u0.png"}},
 {
           "id":"0651808adece4f37880b8cfa6752b926",
-          "label":"",
+          "label":"title",
           "type":"buttonShape",
           "styleType":"h1",
           "visible":true,
@@ -85,7 +85,7 @@
             "normal~":"resources/images/transparent.gif"}},
 {
           "id":"c91cd5d590ee4b54b03a4aefbe2328e4",
-          "label":"",
+          "label":"btnAdd",
           "type":"buttonShape",
           "styleType":"buttonShape",
           "visible":true,
@@ -134,8 +134,10 @@
                               "duration":300,
                               "showType":"none"}}}]}]}]}},
           "tabbable":true,
+          "annotation":{
+            "Description":"click to show add mornitoring dialog"},
           "images":{
-            "normal~":"images/home/u4.png"}},
+            "normal~":"images/home/btnadd_u4.png"}},
 {
           "id":"114d5d66d0284dd5af95f1019a9f7a99",
           "label":"",
@@ -466,7 +468,7 @@
                     "normal~":"resources/images/transparent.gif"}},
 {
                   "id":"be7f8f1ba5b84fe0b7a48838c382551e",
-                  "label":"",
+                  "label":"btnCancel",
                   "parentDynamicPanel":"bce91b1d68a341b98800fe682aadb2b4",
                   "panelIndex":0,
                   "type":"buttonShape",
@@ -517,6 +519,8 @@
                                       "duration":300,
                                       "showType":"none"}}}]}]}]}},
                   "tabbable":true,
+                  "annotation":{
+                    "Description":"cancel add mornitoring dialog"},
                   "images":{
                     "normal~":"resources/images/transparent.gif"}},
 {
@@ -572,6 +576,8 @@
                                       "duration":300,
                                       "showType":"none"}}}]}]}]}},
                   "tabbable":true,
+                  "annotation":{
+                    "Description":"add a new mornitoring task and close this dialog"},
                   "images":{
                     "normal~":"resources/images/transparent.gif"}},
 {
@@ -689,7 +695,7 @@
                     "normal~":"resources/images/transparent.gif"}},
 {
                   "id":"fd92381a2bb6448f9df3255dcae299e0",
-                  "label":"",
+                  "label":"btnSelectServer",
                   "parentDynamicPanel":"bce91b1d68a341b98800fe682aadb2b4",
                   "panelIndex":0,
                   "type":"buttonShape",
@@ -753,8 +759,10 @@
                                         "duration":300},
                                       "compress":false}}}]}]}]}},
                   "tabbable":true,
+                  "annotation":{
+                    "Description":"show the last used ip, click to show the ip list"},
                   "images":{
-                    "normal~":"images/home/u35.png"}},
+                    "normal~":"images/home/btnselectserver_u35.png"}},
 {
                   "id":"12d8c3af62614be586b41bd3618298be",
                   "label":"",
@@ -796,7 +804,7 @@
                     "normal~":"images/home/u37.png"}},
 {
                   "id":"a1a6bc96f4fe4bdd88d8d3b8beb7e745",
-                  "label":"",
+                  "label":"btnSelectmornitoringTarget",
                   "parentDynamicPanel":"bce91b1d68a341b98800fe682aadb2b4",
                   "panelIndex":0,
                   "type":"buttonShape",
@@ -860,8 +868,10 @@
                                         "duration":300},
                                       "compress":false}}}]}]}]}},
                   "tabbable":true,
+                  "annotation":{
+                    "Description":"show &quot;system&quot; by default, click to show the process list"},
                   "images":{
-                    "normal~":"images/home/u35.png"}},
+                    "normal~":"images/home/btnselectserver_u35.png"}},
 {
                   "id":"ba252341664642c4902d65b1ed34ae27",
                   "label":"",
@@ -938,8 +948,10 @@
                         "cornerRadiusTopLeft":"5"},
                       "adaptiveStyles":{
 }}],
+                  "annotation":{
+                    "Description":"interval, by second, 1s by default"},
                   "images":{
-                    "normal~":"images/home/u35.png"}},
+                    "normal~":"images/home/btnselectserver_u35.png"}},
 {
                   "id":"78e2fe93296a46db998a65979f7901a0",
                   "label":"",
@@ -1277,8 +1289,10 @@
                                         "duration":300},
                                       "compress":false}}}]}]}]}},
                   "tabbable":true,
+                  "annotation":{
+                    "Description":"click to select this ip and go back to last interface"},
                   "images":{
-                    "normal~":"images/home/u35.png"}},
+                    "normal~":"images/home/btnselectserver_u35.png"}},
 {
                   "id":"8d24706a10fe43899ff157f6c38c00e9",
                   "label":"",
@@ -1356,7 +1370,7 @@
                       "adaptiveStyles":{
 }}],
                   "images":{
-                    "normal~":"images/home/u35.png"}},
+                    "normal~":"images/home/btnselectserver_u35.png"}},
 {
                   "id":"f8266a39fcae4e7480c8aa55841d01d8",
                   "label":"",
@@ -1434,7 +1448,7 @@
                       "adaptiveStyles":{
 }}],
                   "images":{
-                    "normal~":"images/home/u35.png"}},
+                    "normal~":"images/home/btnselectserver_u35.png"}},
 {
                   "id":"5dddac8fa4244cb39c410e1e830f21c9",
                   "label":"",
@@ -1512,7 +1526,7 @@
                       "adaptiveStyles":{
 }}],
                   "images":{
-                    "normal~":"images/home/u35.png"}},
+                    "normal~":"images/home/btnselectserver_u35.png"}},
 {
                   "id":"bf58256d9268413bbc493f3aac461c29",
                   "label":"",
@@ -1589,8 +1603,10 @@
                         "cornerRadiusTopLeft":"5"},
                       "adaptiveStyles":{
 }}],
+                  "annotation":{
+                    "Description":"enter ip address here, click the arrow to go back"},
                   "images":{
-                    "normal~":"images/home/u35.png"}},
+                    "normal~":"images/home/btnselectserver_u35.png"}},
 {
                   "id":"ecc0a9eb56d34c4abd92d1d0d3d50b98",
                   "label":"",
@@ -1679,6 +1695,8 @@
                           "height":300}},
                       "adaptiveStyles":{
 }}],
+                  "annotation":{
+                    "Description":"this window has a horizontal scroll bar if there are too many items to show in this area."},
                   "images":{
                     "normal~":"images/home/u19.png"}},
 {
@@ -1844,8 +1862,10 @@
                                         "duration":300},
                                       "compress":false}}}]}]}]}},
                   "tabbable":true,
+                  "annotation":{
+                    "Description":"choose this item to monitor all performance data of every process, just like the task manager in Windows."},
                   "images":{
-                    "normal~":"images/home/u35.png"}},
+                    "normal~":"images/home/btnselectserver_u35.png"}},
 {
                   "id":"242c589d38fe4a4abd741f03f6167899",
                   "label":"",
@@ -1922,8 +1942,10 @@
                         "cornerRadiusTopLeft":"5"},
                       "adaptiveStyles":{
 }}],
+                  "annotation":{
+                    "Description":"choose this item to monitor the system usage of CPU\\RAM\\NETWORK"},
                   "images":{
-                    "normal~":"images/home/u35.png"}},
+                    "normal~":"images/home/btnselectserver_u35.png"}},
 {
                   "id":"8fee5a0e461f473f9b7816fd2beeefbb",
                   "label":"",
@@ -2000,8 +2022,10 @@
                         "cornerRadiusTopLeft":"5"},
                       "adaptiveStyles":{
 }}],
+                  "annotation":{
+                    "Description":"each item reference to a process in the server"},
                   "images":{
-                    "normal~":"images/home/u35.png"}},
+                    "normal~":"images/home/btnselectserver_u35.png"}},
 {
                   "id":"85757407a73f439e874bcb422da66a85",
                   "label":"",
@@ -2079,7 +2103,7 @@
                       "adaptiveStyles":{
 }}],
                   "images":{
-                    "normal~":"images/home/u35.png"}},
+                    "normal~":"images/home/btnselectserver_u35.png"}},
 {
                   "id":"3602f9cd70c74f1784be848cd27ac010",
                   "label":"",
@@ -2231,7 +2255,7 @@
                                       "compress":false}}}]}]}]}},
                   "tabbable":true,
                   "images":{
-                    "normal~":"images/home/u35.png"}},
+                    "normal~":"images/home/btnselectserver_u35.png"}},
 {
                   "id":"6183c6c690d04b73962b11e8fd6ebf16",
                   "label":"",
@@ -2309,7 +2333,7 @@
                       "adaptiveStyles":{
 }}],
                   "images":{
-                    "normal~":"images/home/u35.png"}},
+                    "normal~":"images/home/btnselectserver_u35.png"}},
 {
                   "id":"3d3ad34411124d66bd4daf0e10f84c6d",
                   "label":"",
@@ -2387,7 +2411,7 @@
                       "adaptiveStyles":{
 }}],
                   "images":{
-                    "normal~":"images/home/u35.png"}},
+                    "normal~":"images/home/btnselectserver_u35.png"}},
 {
                   "id":"70f1c169f4ad42c2af221786ffa4701f",
                   "label":"",
@@ -2465,7 +2489,7 @@
                       "adaptiveStyles":{
 }}],
                   "images":{
-                    "normal~":"images/home/u35.png"}},
+                    "normal~":"images/home/btnselectserver_u35.png"}},
 {
                   "id":"212c65e1747541569329e4314fffad9c",
                   "label":"",
@@ -2572,7 +2596,7 @@
                                       "compress":false}}}]}]}]}},
                   "tabbable":true,
                   "images":{
-                    "normal~":"images/home/u35.png"}},
+                    "normal~":"images/home/btnselectserver_u35.png"}},
 {
                   "id":"b208c269db984f4e85f5f15acc548ff9",
                   "label":"",
@@ -2650,7 +2674,7 @@
                       "adaptiveStyles":{
 }}],
                   "images":{
-                    "normal~":"images/home/u35.png"}},
+                    "normal~":"images/home/btnselectserver_u35.png"}},
 {
                   "id":"61fea75fdcf34ca59ec1382c7964bb5f",
                   "label":"",
@@ -2728,7 +2752,7 @@
                       "adaptiveStyles":{
 }}],
                   "images":{
-                    "normal~":"images/home/u35.png"}},
+                    "normal~":"images/home/btnselectserver_u35.png"}},
 {
                   "id":"1e8986eb9d2d42de9e73e5d523972fec",
                   "label":"",
@@ -2806,7 +2830,7 @@
                       "adaptiveStyles":{
 }}],
                   "images":{
-                    "normal~":"images/home/u35.png"}},
+                    "normal~":"images/home/btnselectserver_u35.png"}},
 {
                   "id":"5a2a03c7795b4b5f840579a431615924",
                   "label":"",

@@ -9,3 +9,20 @@ function HideMask(){
     $(".common_mask").css("background-color", "");
     setTimeout(function () { $(".common_mask").remove();}, 300);
 }
+
+var ConnectionFactory = (function () {
+    var connections = {};
+    var getConnection = function(uri) {
+        if (!connections[uri]) {
+            var con = new WebSocket("ws://" + uri);
+            con.addEventListener("close", function() {
+                delete connections[uri];
+            });
+            connections[uri] = con;
+        }
+        return connections[uri];
+    };
+    return {
+        getConnection: getConnection
+    };
+})();

@@ -28,6 +28,7 @@
     <Compile Include="WebServer\webServer.js" />
     <Content Include="WebServer\public\css\jquery.gridster.css" />
     <Content Include="WebServer\public\css\normalize.css" />
+    <Content Include="WebServer\public\font\font.css" />
     <Content Include="WebServer\public\font\helvetica-neue-lt-com-25-ultra-light.ttf" />
     <Content Include="WebServer\public\font\Walkway Black.ttf" />
     <Content Include="WebServer\public\font\Walkway Bold.ttf" />

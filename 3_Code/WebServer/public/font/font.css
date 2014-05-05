@@ -1,0 +1,7 @@
+﻿@font-face { font-family: "light-font"; src: url("./Walkway SemiBold.ttf"); }
+
+@media 
+(-webkit-min-device-pixel-ratio: 2), 
+(min-resolution: 192dpi) {
+    @font-face { font-family: "light-font"; src: url("./helvetica-neue-lt-com-25-ultra-light.ttf"); }
+}

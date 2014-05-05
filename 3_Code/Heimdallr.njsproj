@@ -26,9 +26,16 @@
     <Compile Include="WebServer\public\js\jquery-2.1.0.min.js" />
     <Compile Include="WebServer\public\js\jquery.gridster.js" />
     <Compile Include="WebServer\webServer.js" />
+    <Content Include="WebServer\public\css\cssreset-min.css" />
+    <Content Include="WebServer\public\css\font-awesome.css" />
     <Content Include="WebServer\public\css\jquery.gridster.css" />
     <Content Include="WebServer\public\css\normalize.css" />
     <Content Include="WebServer\public\font\font.css" />
+    <Content Include="WebServer\public\font\fontawesome-webfont.eot" />
+    <Content Include="WebServer\public\font\fontawesome-webfont.svg" />
+    <Content Include="WebServer\public\font\fontawesome-webfont.ttf" />
+    <Content Include="WebServer\public\font\fontawesome-webfont.woff" />
+    <Content Include="WebServer\public\font\FontAwesome.otf" />
     <Content Include="WebServer\public\font\helvetica-neue-lt-com-25-ultra-light.ttf" />
     <Content Include="WebServer\public\font\Walkway Black.ttf" />
     <Content Include="WebServer\public\font\Walkway Bold.ttf" />

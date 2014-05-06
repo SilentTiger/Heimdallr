@@ -18,18 +18,22 @@
         .gridster ul { float:left }
         .gridster li { overflow: hidden; }
 
-        .step1Content { width: 100%;height: 100% }
-        .step1Content .option { margin: 60px 0 0 0}
+        .step1Content { width: 100%;height: calc(100% - 60px);padding-top:60px}
+        .step1Content .option { margin: 0 0 60px 0; }
+        .step1Content .option:first-child { top: 60px}
         .step1Content .option label { width: 200px; text-align: right; display: inline-block; }
         .step1Content .option > span { width: 290px; text-align: left; display: inline-block; padding: 0 0 0 10px; border-radius: 10px; border: 1px solid #000; cursor: default; transition:border-color linear 0.15s}
         .step1Content .option > span:hover { border-color: #007aff; }
         .step1Content .option .optionContent {display:inline-block}
-        .step1Content .option .iconButton { float:right;margin-right:10px}
+        .step1Content .option .intervalOption { width: 212px }
+        .step1Content .option .intervalOption .unit { width: 126px; }
+        .step1Content .option .iconButton { float: right; margin-right: 10px; -moz-user-select:none; -ms-user-select:none; -webkit-user-select:none; user-select:none; }
+        .step1Content .option .iconButton span:hover {color:#007AFF}
     </style>
     <style type="text/css">
         .dialog { position: fixed; width: 600px; height: 480px; background-color:#FFF; top: 100%; left: calc(50% - 300px); z-index: 1000; transition: top ease-out 0.3s, opacity ease-out 0.4s; }
-        .stepDialog{ width: 100%; height: 100%; overflow: hidden;}
-        .stepPanel { width: 100%; height: 100%; }
+        .stepDialog{ width: 100%; height: 100%; overflow: hidden; position:relative}
+        .stepPanel { width: 100%; height: 100%; position: absolute; transition:left ease-in-out 0.2s; }
         .stepPanel_title_bar { height: 40px; border-bottom: 1px solid #8E8E93; text-align:center}
         .stepPanel_title_bar .stepPanel_title_text { font-weight:900; font-size:36px; }
         .stepPanel_title_bar .stepPanel_title_button { line-height: 40px; color: #C7C7CC; cursor: default; transition:color linear 0.15s}
@@ -64,7 +68,7 @@
 
     <div id="dlgNewMornitoring" class="dialog" style="">
         <div class="stepDialog">
-            <div class="stepPanel" step="1">
+            <div class="stepPanel" step="1" style="left:0">
                 <div class="stepPanel_title_bar">
                     <span class="stepPanel_title_button stepPanel_title_button_left">Cancel</span>
                     <span class="stepPanel_title_text">Add Monitoring</span>
@@ -83,7 +87,7 @@
                         <div class="option">
                             <label>Interval</label>
                             <span>
-                                <span class="optionContent"></span>
+                                <span class="optionContent intervalOption"><span>1</span><span class="unit" style="float:right">second</span></span>
                                 <span class="iconButton">
                                     <span class="icon-angle-up"></span>
                                     <span class="icon-angle-down"></span>
@@ -93,22 +97,22 @@
                     </div>
                 </div>
             </div>
-            <div class="stepPanel" step="2">
+            <div class="stepPanel" step="2" style="left:100%">
                 <div class="stepPanel_title_bar">
                     <span class="stepPanel_title_button stepPanel_title_button_left">Back</span>
                     <span class="stepPanel_title_text">Select Server</span>
                 </div>
                 <div class="stepPanel_container">
-                    <button id="btnServerIP">btnServerIP</button>
+                    step 2
                 </div>
             </div>
-            <div class="stepPanel" step="3">
+            <div class="stepPanel" step="3" style="left:100%">
                 <div class="stepPanel_title_bar">
                     <span class="stepPanel_title_button stepPanel_title_button_left">Back</span>
                     <span class="stepPanel_title_text">Select Target</span>
                 </div>
                 <div class="stepPanel_container">
-                    <button id="btnServerIP">btnServerIP</button>
+                    step 3
                 </div>
             </div>
         </div>
@@ -117,20 +121,69 @@
     <script src="js/jquery.gridster.js"></script>
     <script src="js/common.js"></script>
     <script type="text/javascript">
-        $("#btnAddWidget").bind("click", function() {
-            if (!ShowMask()) return;
-            $('#dlgNewMornitoring').css({
-                "top": "calc(50% - 240px)",
-                "opacity": 1
+        (function () {
+            $("#btnAddWidget").bind("click", function () {
+                if (!ShowMask()) return;
+                $('#dlgNewMornitoring').css({
+                    "top": "calc(50% - 240px)",
+                    "opacity": 1
+                });
             });
-        });
-        $('#dlgNewMornitoring').find(".stepPanel[step=1] .stepPanel_title_button").eq(0).bind("click", function () {
-            $('#dlgNewMornitoring').css({
-                "top": "",
-                "opacity": 0
+            $('#dlgNewMornitoring').find(".stepPanel[step=1] .stepPanel_title_button").eq(0).bind("click", function () {
+                $('#dlgNewMornitoring').css({
+                    "top": "",
+                    "opacity": 0
+                });
+                HideMask();
             });
-            HideMask();
-        });
+            var pressholdTimer;
+            var plus = function () {
+                var start = parseInt($('#dlgNewMornitoring').find(".stepPanel[step=1] .option .intervalOption > span:first ").text());
+                if (start >= 300) return;
+                start++;
+                if ($('#dlgNewMornitoring').find(".stepPanel[step=1] .option .intervalOption > .unit ").text() === "second" && start > 1) {
+                    $('#dlgNewMornitoring').find(".stepPanel[step=1] .option .intervalOption > .unit ").text("seconds");
+                }
+                $('#dlgNewMornitoring').find(".stepPanel[step=1] .option .intervalOption > span:first ").text(start);
+            }
+            var minus = function () {
+                var start = parseInt($('#dlgNewMornitoring').find(".stepPanel[step=1] .option .intervalOption > span:first ").text());
+                if (start <= 1) return;
+                start--;
+                if (start === 1) { $('#dlgNewMornitoring').find(".stepPanel[step=1] .option .intervalOption > .unit ").text("second"); }
+                $('#dlgNewMornitoring').find(".stepPanel[step=1] .option .intervalOption > span:first ").text(start);
+            }
+            var unbindFunction = function () {
+                clearInterval(pressholdTimer);
+                document.removeEventListener("mouseup", unbindFunction, true);
+            }
+            $('#dlgNewMornitoring').find(".stepPanel[step=1] .option").eq(2).find(".iconButton > .icon-angle-up").bind("mousedown", function () {
+                plus();
+                pressholdTimer = setInterval(plus, 120);
+                document.addEventListener("mouseup", unbindFunction, true);
+            });
+            $('#dlgNewMornitoring').find(".stepPanel[step=1] .option").eq(2).find(".iconButton > .icon-angle-down").bind("mousedown", function () {
+                minus();
+                pressholdTimer = setInterval(minus, 120);
+                document.addEventListener("mouseup", unbindFunction, true);
+            });
+
+            $('#dlgNewMornitoring .stepPanel[step=1] .step1Content .option:first').bind("click", function () {
+                $('#dlgNewMornitoring .stepPanel[step=1]').css('left', '-100%');
+                $('#dlgNewMornitoring .stepPanel[step=2]').css('left', '100%');
+                setTimeout(function () {
+                    $('#dlgNewMornitoring .stepPanel[step=2]').css('left', '0');
+                }, 1);
+            });
+
+            $('#dlgNewMornitoring .stepPanel[step=1] .step1Content .option:eq(1)').bind("click", function () {
+                $('#dlgNewMornitoring .stepPanel[step=1]').css('left', '-100%');
+                $('#dlgNewMornitoring .stepPanel[step=3]').css('left', '100%');
+                setTimeout(function () {
+                    $('#dlgNewMornitoring .stepPanel[step=3]').css('left', '0');
+                }, 1);
+            });
+        })();
 
         var ws = ConnectionFactory.getConnection("10.50.141.116:8080");
         ws.onmessage = function (msg) { console.log(msg); };

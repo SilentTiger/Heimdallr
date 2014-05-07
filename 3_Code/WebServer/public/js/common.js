@@ -10,6 +10,17 @@ function HideMask(){
     setTimeout(function () { $(".common_mask").remove();}, 300);
 }
 
+function ShowBusy(){
+    if ($(".busy_mask").length > 0) return false;
+    $(document.body).append("<div class='busy_mask'></div>");
+    return true;
+}
+
+function HideBusy(){
+    $(".busy_mask").css("background-color", "");
+    setTimeout(function () { $(".busy_mask").remove();}, 300);
+}
+
 var ConnectionFactory = (function () {
     var connections = {};
     var getConnection = function(uri) {

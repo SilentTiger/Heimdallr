@@ -85,7 +85,7 @@
                     <div class="step1Content">
                         <div class="option">
                             <label>Server</label>
-                            <span><span class="optionContent">10.50.141.10</span><span class="iconButton icon-angle-right"></span></span>
+                            <span><span id="valServerIP" class="optionContent"></span><span class="iconButton icon-angle-right"></span></span>
                         </div>
                         <div class="option">
                             <label>Target</label>
@@ -113,7 +113,7 @@
                     <div class="step2Content">
                         <input id="txtIP" type="text" placeholder="eg:196.21.10.51:8685">
                         <span id="btnAddIP" class="icon-plus"></span>
-                        <span id="icnConnection" class="icon-spinner icon-spin"></span>
+                        <span id="icnConnection" class="icon-spinner icon-spin" style="display:none"></span>
                     </div>
                 </div>
             </div>
@@ -211,13 +211,27 @@
 
             var connect = function (addr) {
                 var connection = ConnectionFactory.getConnection(addr);
+                var showWaitingTimeout = setTimeout(function () {
+                    $('#txtIP').attr('disabled', 'disabled');
+                    $('#btnAddIP').css('display', 'none');
+                    $('#icnConnection').css('display', '');
+                }, 500);
                 connection.addEventListener("error", function () {
-
+                    $('#txtIP').removeAttr('disabled');
+                    clearTimeout(showWaitingTimeout);
+                    $('#icnConnection').css('display', 'none');
+                    $('#btnAddIP').css('display', '');
                 });
                 connection.addEventListener("open", function () {
-
+                    clearTimeout(showWaitingTimeout);
+                    $('#icnConnection').css('display', 'none');
+                    $('#btnAddIP').css('display', '');
+                    $('#valServerIP').text($('#txtIP').val());
+                    back2Step1();
                 });
             }
+
+            $('#btnAddIP').bind('click', function () {connect($('#txtIP').val());});
         })();
 
         //step 3 logic & event
@@ -229,9 +243,6 @@
             $('#dlgNewMornitoring').find(".stepPanel[step=3] .stepPanel_title_button").eq(0).bind("click", back2Step1);
         })();
 
-        var ws = ConnectionFactory.getConnection("10.50.141.116:8080");
-        ws.onmessage = function (msg) { console.log(msg); };
-
         function startListen() {
             ws.send(JSON.stringify({ cmd: 'addMonitoringTarget', data: { id: pid.value, interval: parseInt(interval.value) } }));
         }
@@ -240,10 +251,6 @@
             ws.send(JSON.stringify({ cmd: 'removeMonitoringTarget', data: { id: pid.value } }));
         }
 
-        var gridster = $(".gridster ul").gridster({
-            widget_margins: [5, 5],
-            widget_base_dimensions: [400, 200]
-        }).data('gridster');
     </script>
 </body>
 </html>

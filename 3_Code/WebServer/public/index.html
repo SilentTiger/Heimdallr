@@ -38,6 +38,11 @@
         .stepPanel .stepPanel_title_bar .icon-refresh {display: inline-block;transition:color linear 0.15s;padding: 0 2px 0 2px;color: #C7C7CC;}
         .stepPanel .stepPanel_title_bar .icon-refresh:hover {color:#007AFF;}
         .stepPanel .stepPanel_title_bar .icon-spin:hover {color: #C7C7CC;}
+
+        .txtSearchPcs{margin:15px 0 0 15px;}
+        .icon-search{margin-left: 20px;color:#C7C7CC;}
+        .processesContainer {width: 100%;height: calc(100% - 5px);font-size: 24px;padding: 5px 0 0 5px}
+        .processesContainer li {display: inline-block; width: 300px;border:solid 1px #000;border-radius: 4px;}
     </style>
     <style type="text/css">
         .dialog { position: fixed; width: 600px; height: 480px; background-color:#FFF; top: 100%; left: calc(50% - 300px); z-index: 1000; transition: top ease-out 0.3s, opacity ease-out 0.4s; }
@@ -114,7 +119,7 @@
                 </div>
                 <div class="stepPanel_container">
                     <div class="step2Content">
-                        <input id="txtIP" type="text" placeholder="eg:196.21.10.51:8685" value="10.51.5.3:8080">
+                        <input id="txtIP" type="text" placeholder="eg:196.21.10.51:8685" value="10.50.141.14:8080">
                         <span id="btnAddIP" class="icon-plus"></span>
                         <span id="icnConnection" class="icon-spinner icon-spin" style="display:none"></span>
                     </div>
@@ -127,6 +132,10 @@
                     <span id="btnRefreshProcesses" class="stepPanel_title_button stepPanel_title_button_active stepPanel_title_button_right icon-refresh"></span>
                 </div>
                 <div class="stepPanel_container">
+                    <input type="text" placeholder="Search" class="txtSearchPcs"><span class="icon-search"></span><br>
+                    <ul class="processesContainer">
+                        <li><span class="pcsPID">PID01</span><span class="pcsCMD">ASDSADSADSA</span></li>
+                    </ul>
                 </div>
             </div>
         </div>
@@ -261,10 +270,16 @@
                     if(!msgEvent || !msgEvent.data) return;
                     var msgData = eval('(' + msgEvent.data + ')');
                     if( msgData.id !== 'syscontrol' || msgData.cmd !== 'listProcess') return;
-                    var processList = msgData.data;
-                    console.log(processList);
 
                     conn.removeEventListener('message', refreshProcesses);
+                    var processList = msgData.data;
+                    var pcsListHTML = "";
+                    for(var i = 0, l = processList.length; i < l; i++){
+                        pcsListHTML += '<li><span class="pcsPID">' + processList[i][0] + '</span><span class="pcsCMD" title = "' + processList[i][1] + '">' + processList[i][1] + '</span></li>';
+                    }
+                    $('.processesContainer')[0].innerHTML = pcsListHTML;
+                    HideBusy();
+                    $("#btnRefreshProcesses").removeClass('icon-spin');
                 };
 
                 conn.addEventListener('message', refreshProcesses);

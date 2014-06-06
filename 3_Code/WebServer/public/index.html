@@ -35,6 +35,9 @@
         #btnAddIP { transition:color linear 0.2s; cursor:default }
         #btnAddIP:hover { color: #007AFF; }
 
+        .stepPanel .stepPanel_title_bar .icon-refresh {display: inline-block;transition:color linear 0.15s;padding: 0 2px 0 2px;color: #C7C7CC;}
+        .stepPanel .stepPanel_title_bar .icon-refresh:hover {color:#007AFF;}
+        .stepPanel .stepPanel_title_bar .icon-spin:hover {color: #C7C7CC;}
     </style>
     <style type="text/css">
         .dialog { position: fixed; width: 600px; height: 480px; background-color:#FFF; top: 100%; left: calc(50% - 300px); z-index: 1000; transition: top ease-out 0.3s, opacity ease-out 0.4s; }
@@ -111,7 +114,7 @@
                 </div>
                 <div class="stepPanel_container">
                     <div class="step2Content">
-                        <input id="txtIP" type="text" placeholder="eg:196.21.10.51:8685">
+                        <input id="txtIP" type="text" placeholder="eg:196.21.10.51:8685" value="10.51.5.3:8080">
                         <span id="btnAddIP" class="icon-plus"></span>
                         <span id="icnConnection" class="icon-spinner icon-spin" style="display:none"></span>
                     </div>
@@ -119,15 +122,16 @@
             </div>
             <div class="stepPanel" step="3" style="left:100%">
                 <div class="stepPanel_title_bar">
-                    <span class="stepPanel_title_button stepPanel_title_button_left stepPanel_title_button_active">Back</span>
+                    <span class="stepPanel_title_button stepPanel_title_button_active stepPanel_title_button_left">Back</span>
                     <span class="stepPanel_title_text">Select Target</span>
+                    <span id="btnRefreshProcesses" class="stepPanel_title_button stepPanel_title_button_active stepPanel_title_button_right icon-refresh"></span>
                 </div>
                 <div class="stepPanel_container">
-                    step 3
                 </div>
             </div>
         </div>
     </div>
+
     <script src="js/jquery-2.1.0.min.js"></script>
     <script src="js/jquery.gridster.js"></script>
     <script src="js/common.js"></script>
@@ -210,17 +214,20 @@
             $('#dlgNewMornitoring').find(".stepPanel[step=2] .stepPanel_title_button").eq(0).bind("click", back2Step1);
 
             var connect = function (addr) {
+                ShowBusy();
                 var connection = ConnectionFactory.getConnection(addr);
                 var showWaitingTimeout = setTimeout(function () {
                     $('#txtIP').attr('disabled', 'disabled');
                     $('#btnAddIP').css('display', 'none');
                     $('#icnConnection').css('display', '');
                 }, 500);
-                connection.addEventListener("error", function () {
+                connection.addEventListener("error", function (ex) {
                     $('#txtIP').removeAttr('disabled');
                     clearTimeout(showWaitingTimeout);
                     $('#icnConnection').css('display', 'none');
                     $('#btnAddIP').css('display', '');
+                    HideBusy();
+                    console.log('connect error', ex);
                 });
                 connection.addEventListener("open", function () {
                     clearTimeout(showWaitingTimeout);
@@ -228,6 +235,8 @@
                     $('#btnAddIP').css('display', '');
                     $('#valServerIP').text($('#txtIP').val());
                     back2Step1();
+                    $('#txtIP').val("");
+                    HideBusy();
                 });
             }
 
@@ -241,6 +250,25 @@
                 $('#dlgNewMornitoring .stepPanel[step=3]').css('left', '100%');
             }
             $('#dlgNewMornitoring').find(".stepPanel[step=3] .stepPanel_title_button").eq(0).bind("click", back2Step1);
+
+            $("#btnRefreshProcesses").bind('click', function(){
+                ShowBusy();
+                $(this).addClass('icon-spin');
+                var conn = ConnectionFactory.getConnection($('#valServerIP').text());
+                conn.send(JSON.stringify({ cmd: 'listProcess' }));  //have not consider about the situation of connection exception, wait :p
+
+                var refreshProcesses = function refreshProcesses(msgEvent){
+                    if(!msgEvent || !msgEvent.data) return;
+                    var msgData = eval('(' + msgEvent.data + ')');
+                    if( msgData.id !== 'syscontrol' || msgData.cmd !== 'listProcess') return;
+                    var processList = msgData.data;
+                    console.log(processList);
+
+                    conn.removeEventListener('message', refreshProcesses);
+                };
+
+                conn.addEventListener('message', refreshProcesses);
+            });
         })();
 
         function startListen() {

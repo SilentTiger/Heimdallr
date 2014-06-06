@@ -80,13 +80,18 @@ var Monitor = (function(){
 		}
 	};
 	function listProcess(client, data){
-		console.log("-----------------------------");
-		exec("ps aux -H", function(error, stdout, stderr){
-			//client.send(JSON.stringify({id: this.id, data: this.formateData(stdout), time: new Date()}));
-			console.log("=========================");
-			console.log(error);
-			console.log(stdout);
-			console.log(stderr);
+		exec("ps -eo pid,command", function(error, stdout, stderr){
+			if(error){console.log("listProcess error: " + new Date()), error;}
+			if(stderr){console.log("listProcess stderr: " + new Date()), stderr;}
+
+			var temp = stdout.split('\n');
+			var pidEnd = temp[0].indexOf('PID') + 3;
+			
+			var processList = [];
+			for(var i = 1, l = temp.length - 1; i < l; i++){
+				processList.push([temp[i].substring(0, pidEnd), temp[i].substring(pidEnd + 1)]);
+			}
+			client.send(JSON.stringify({id: 'syscontrol', cmd: 'listProcess', data: processList, time: new Date()}));
 		});
 	};
 

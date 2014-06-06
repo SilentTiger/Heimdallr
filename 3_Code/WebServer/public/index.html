@@ -6,7 +6,7 @@
     <link href="./css/cssreset-min.css" rel="stylesheet" />
     <link href="./css/normalize.css" rel="stylesheet">
     <link href="./css/jquery.gridster.css" rel="stylesheet">
-    <link href="css/font-awesome.css" rel="stylesheet" />
+    <link href="./css/font-awesome.css" rel="stylesheet" />
     <link href="./font/font.css" rel="stylesheet">
     <style type="text/css">
         body, html { height: 100%; width: 100%; overflow: hidden; font: 400 34px "light-font", 'Century Gothic', Helvetica, Arial, sans-serif; }
@@ -229,7 +229,7 @@
             $('#dlgNewMornitoring').find(".stepPanel[step=3] .stepPanel_title_button").eq(0).bind("click", back2Step1);
         })();
 
-        var ws = ConnectionFactory.getConnection("10.50.141.116:8080");
+        var ws = ConnectionFactory.getConnection("10.50.141.133:8080");
         ws.onmessage = function (msg) { console.log(msg); };
 
         function startListen() {

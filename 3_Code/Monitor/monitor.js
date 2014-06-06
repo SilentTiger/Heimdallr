@@ -1,3 +1,4 @@
+var exec = require('child_process').exec;
 var WebSocketServer = require('websocket').server,
     http = require('http'),
     Client = require('./Client.js').Client,
@@ -78,11 +79,22 @@ var Monitor = (function(){
 			}
 		}
 	};
-	
+	function listProcess(client, data){
+		console.log("-----------------------------");
+		exec("ps aux -H", function(error, stdout, stderr){
+			//client.send(JSON.stringify({id: this.id, data: this.formateData(stdout), time: new Date()}));
+			console.log("=========================");
+			console.log(error);
+			console.log(stdout);
+			console.log(stderr);
+		});
+	};
+
 	return {
 		start: startMonitor,
 		addMonitoringTarget: addMonitoringTarget,
-		removeMonitoringTarget: removeMonitoringTarget
+		removeMonitoringTarget: removeMonitoringTarget,
+		listProcess: listProcess
 	};
 })();
 

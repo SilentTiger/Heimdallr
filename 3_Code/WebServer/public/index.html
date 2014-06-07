@@ -39,10 +39,12 @@
         .stepPanel .stepPanel_title_bar .icon-refresh:hover {color:#007AFF;}
         .stepPanel .stepPanel_title_bar .icon-spin:hover {color: #C7C7CC;}
 
-        .txtSearchPcs{margin:15px 0 0 15px;padding-right: 35px;}
+        #txtSearchPcs{margin:15px 0 0 15px;padding-right: 35px;}
         .btnSearch{margin-left: -35px;color:#C7C7CC;}
-        .processesContainer {width: 100%;height: calc(100% - 5px);font-size: 24px;padding: 5px 0 0 5px}
-        .processesContainer li {display: inline-block; width: 300px;border:solid 1px #000;border-radius: 4px;}
+        .processesContainer {margin-top:5px;width: calc(100% - 30px);height: 375px;font-size: 24px;padding: 0 15px;overflow:auto;column-gap:0;column-width:285px;
+                            -webkit-column-gap:0;-webkit-column-width:285px;}
+        .processesContainer li {display: inline-block; width: 275px;border:solid 1px #000;border-radius: 4px;margin-top: 7px;overflow: hidden;text-overflow:ellipsis;white-space: nowrap;cursor: default;}
+        .processesContainer .pcsPID{font-weight: 800;padding-left: 4px;}
     </style>
     <style type="text/css">
         .dialog { position: fixed; width: 600px; height: 480px; background-color:#FFF; top: 100%; left: calc(50% - 300px); z-index: 1000; transition: top ease-out 0.3s, opacity ease-out 0.4s; }
@@ -97,7 +99,7 @@
                         </div>
                         <div class="option">
                             <label>Target</label>
-                            <span><span class="optionContent"></span><span class="iconButton icon-angle-right"></span></span>
+                            <span><span id="valTarget" class="optionContent"></span><span class="iconButton icon-angle-right"></span></span>
                         </div>
                         <div class="option">
                             <label>Interval</label>
@@ -132,7 +134,7 @@
                     <span id="btnRefreshProcesses" class="stepPanel_title_button stepPanel_title_button_active stepPanel_title_button_right icon-refresh"></span>
                 </div>
                 <div class="stepPanel_container">
-                    <input type="text" placeholder="Search" class="txtSearchPcs"><span class="btnSearch icon-search"></span><br>
+                    <input type="text" placeholder="Search" id="txtSearchPcs"><span class="btnSearch icon-search"></span><br>
                     <ul class="processesContainer">
                         <li><span class="pcsPID">PID01</span><span class="pcsCMD">ASDSADSADSA</span></li>
                     </ul>
@@ -285,7 +287,7 @@
                     var processList = msgData.data;
                     
                     for(var i = 0, l = processList.length; i < l; i++){
-                        pcsListHTML += '<li><span class="pcsPID">' + processList[i][0] + '</span><span class="pcsCMD" title = "' + processList[i][1] + '">' + processList[i][1] + '</span></li>';
+                        pcsListHTML += '<li title="PID:' + processList[i][0] + '\r\nCommand:' + processList[i][1] + '"><span class="pcsPID">' + processList[i][0] + '</span>&nbsp;&nbsp;<span class="pcsCMD">' + processList[i][1] + '</span></li>';
                     }
 
                     refreshEnded = true;
@@ -314,6 +316,19 @@
                 conn.send(JSON.stringify({ cmd: 'listProcess' }));  //have not consider about the situation of connection exception, wait :p
 
                 conn.addEventListener('message', refreshProcesses);
+            });
+
+            $('#txtSearchPcs').bind('input', function(){
+                if($(this).val() !== ""){
+                    $('.processesContainer > li').hide()
+                    $('.processesContainer > li[title*=' + $(this).val() + ']').show();
+                }else{
+                    $('.processesContainer > li').show()
+                }
+            });
+
+            $('.processesContainer').on('click', 'li', function(event){
+                console.log($(this));
             });
         })();
 

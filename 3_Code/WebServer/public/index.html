@@ -43,7 +43,8 @@
         .btnSearch{margin-left: -35px;color:#C7C7CC;}
         .processesContainer {margin-top:5px;width: calc(100% - 30px);height: 375px;font-size: 24px;padding: 0 15px;overflow:auto;column-gap:0;column-width:285px;
                             -webkit-column-gap:0;-webkit-column-width:285px;}
-        .processesContainer li {display: inline-block; width: 275px;border:solid 1px #000;border-radius: 4px;margin-top: 7px;overflow: hidden;text-overflow:ellipsis;white-space: nowrap;cursor: default;}
+        .processesContainer li {display: inline-block; width: 275px;border:solid 1px #000;border-radius: 4px;margin-top: 7px;overflow: hidden;text-overflow:ellipsis;white-space: nowrap;cursor: default;transition:border-color linear 0.15s;}
+        .processesContainer li:hover{border-color:#007AFF;}
         .processesContainer .pcsPID{font-weight: 800;padding-left: 4px;}
     </style>
     <style type="text/css">
@@ -225,6 +226,7 @@
             });
             //goto step3
             $('#dlgNewMornitoring .stepPanel[step=1] .step1Content .option:eq(1)').bind("click", function () {
+                if($("#valServerIP").text() === "") return;
                 $("#txtSearchPcs").val("");
                 $("#btnRefreshProcesses").click();
                 $('#dlgNewMornitoring .stepPanel[step=1]').css('left', '-100%');

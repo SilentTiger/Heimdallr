@@ -135,9 +135,7 @@
                 </div>
                 <div class="stepPanel_container">
                     <input type="text" placeholder="Search" id="txtSearchPcs"><span class="btnSearch icon-search"></span><br>
-                    <ul class="processesContainer">
-                        <li><span class="pcsPID">PID01</span><span class="pcsCMD">ASDSADSADSA</span></li>
-                    </ul>
+                    <ul class="processesContainer"></ul>
                 </div>
             </div>
         </div>
@@ -160,6 +158,7 @@
 
         //step 1 logic & event
         (function () {
+            //click cancel
             $('#dlgNewMornitoring').find(".stepPanel[step=1] .stepPanel_title_button").eq(0).bind("click", function () {
                 $('#dlgNewMornitoring').css({
                     "top": "",
@@ -167,6 +166,23 @@
                 });
                 HideMask();
             });
+            //click finish
+            $('#dlgNewMornitoring').find(".stepPanel[step=1] .stepPanel_title_button").eq(1).bind("click", function () {
+                if($('#valServerIP').text() === "" || $('#valTarget').text() === "") return;
+
+                var ws = ConnectionFactory.getConnection($('#valServerIP').text());
+                ws.send(JSON.stringify({ cmd: 'addMonitoringTarget',
+                                        data: {
+                                            id: $('#valTarget').text(),
+                                            interval: parseInt($('#dlgNewMornitoring').find(".stepPanel[step=1] .option .intervalOption > span:first ").text()) 
+                                        }}));
+                $('#dlgNewMornitoring').css({
+                    "top": "",
+                    "opacity": 0
+                });
+                HideMask();
+            });
+
             var pressholdTimer;
             var plus = function () {
                 var start = parseInt($('#dlgNewMornitoring').find(".stepPanel[step=1] .option .intervalOption > span:first ").text());
@@ -199,6 +215,7 @@
                 document.addEventListener("mouseup", unbindFunction, true);
             });
 
+            //goto step2
             $('#dlgNewMornitoring .stepPanel[step=1] .step1Content .option:first').bind("click", function () {
                 $('#dlgNewMornitoring .stepPanel[step=1]').css('left', '-100%');
                 $('#dlgNewMornitoring .stepPanel[step=2]').css('left', '100%');
@@ -206,8 +223,10 @@
                     $('#dlgNewMornitoring .stepPanel[step=2]').css('left', '0');
                 }, 1);
             });
-
+            //goto step3
             $('#dlgNewMornitoring .stepPanel[step=1] .step1Content .option:eq(1)').bind("click", function () {
+                $("#txtSearchPcs").val("");
+                $("#btnRefreshProcesses").click();
                 $('#dlgNewMornitoring .stepPanel[step=1]').css('left', '-100%');
                 $('#dlgNewMornitoring .stepPanel[step=3]').css('left', '100%');
                 setTimeout(function () {
@@ -274,6 +293,7 @@
                 var endRefresh = function endRefresh(html){
                     if(html){
                         $('.processesContainer')[0].innerHTML = html;
+                        $('#txtSearchPcs').focus();
                     }
                     HideBusy();
                     $("#btnRefreshProcesses").removeClass('icon-spin');
@@ -328,7 +348,9 @@
             });
 
             $('.processesContainer').on('click', 'li', function(event){
-                console.log($(this));
+                $('#txtSearchPcs').val("");
+                $('#valTarget').text($(this).find('.pcsPID').text());
+                back2Step1();
             });
         })();
 

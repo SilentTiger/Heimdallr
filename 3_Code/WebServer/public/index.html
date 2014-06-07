@@ -39,8 +39,8 @@
         .stepPanel .stepPanel_title_bar .icon-refresh:hover {color:#007AFF;}
         .stepPanel .stepPanel_title_bar .icon-spin:hover {color: #C7C7CC;}
 
-        .txtSearchPcs{margin:15px 0 0 15px;}
-        .icon-search{margin-left: 20px;color:#C7C7CC;}
+        .txtSearchPcs{margin:15px 0 0 15px;padding-right: 35px;}
+        .btnSearch{margin-left: -35px;color:#C7C7CC;}
         .processesContainer {width: 100%;height: calc(100% - 5px);font-size: 24px;padding: 5px 0 0 5px}
         .processesContainer li {display: inline-block; width: 300px;border:solid 1px #000;border-radius: 4px;}
     </style>
@@ -119,7 +119,7 @@
                 </div>
                 <div class="stepPanel_container">
                     <div class="step2Content">
-                        <input id="txtIP" type="text" placeholder="eg:196.21.10.51:8685" value="10.50.141.14:8080">
+                        <input id="txtIP" type="text" placeholder="eg:196.21.10.51:8685" value="10.51.5.28:8080">
                         <span id="btnAddIP" class="icon-plus"></span>
                         <span id="icnConnection" class="icon-spinner icon-spin" style="display:none"></span>
                     </div>
@@ -132,7 +132,7 @@
                     <span id="btnRefreshProcesses" class="stepPanel_title_button stepPanel_title_button_active stepPanel_title_button_right icon-refresh"></span>
                 </div>
                 <div class="stepPanel_container">
-                    <input type="text" placeholder="Search" class="txtSearchPcs"><span class="icon-search"></span><br>
+                    <input type="text" placeholder="Search" class="txtSearchPcs"><span class="btnSearch icon-search"></span><br>
                     <ul class="processesContainer">
                         <li><span class="pcsPID">PID01</span><span class="pcsCMD">ASDSADSADSA</span></li>
                     </ul>
@@ -263,9 +263,19 @@
             $("#btnRefreshProcesses").bind('click', function(){
                 ShowBusy();
                 $(this).addClass('icon-spin');
-                var conn = ConnectionFactory.getConnection($('#valServerIP').text());
-                conn.send(JSON.stringify({ cmd: 'listProcess' }));  //have not consider about the situation of connection exception, wait :p
+                $('.processesContainer')[0].innerHTML = "";
 
+                var timerEnded = false;
+                var refreshEnded = false;
+                var pcsListHTML = "";
+
+                var endRefresh = function endRefresh(html){
+                    if(html){
+                        $('.processesContainer')[0].innerHTML = html;
+                    }
+                    HideBusy();
+                    $("#btnRefreshProcesses").removeClass('icon-spin');
+                };
                 var refreshProcesses = function refreshProcesses(msgEvent){
                     if(!msgEvent || !msgEvent.data) return;
                     var msgData = eval('(' + msgEvent.data + ')');
@@ -273,14 +283,35 @@
 
                     conn.removeEventListener('message', refreshProcesses);
                     var processList = msgData.data;
-                    var pcsListHTML = "";
+                    
                     for(var i = 0, l = processList.length; i < l; i++){
                         pcsListHTML += '<li><span class="pcsPID">' + processList[i][0] + '</span><span class="pcsCMD" title = "' + processList[i][1] + '">' + processList[i][1] + '</span></li>';
                     }
-                    $('.processesContainer')[0].innerHTML = pcsListHTML;
-                    HideBusy();
-                    $("#btnRefreshProcesses").removeClass('icon-spin');
+
+                    refreshEnded = true;
+                    if(timerEnded){
+                        endRefresh(pcsListHTML);
+                        clearTimeout(timeoutTimer);
+                    }
                 };
+
+                var timer = setTimeout(function(){
+                    timerEnded = true;
+                    if(refreshEnded){
+                        endRefresh(pcsListHTML);
+                        clearTimeout(timeoutTimer);
+                    }
+                }, 1000);
+
+                var timeoutTimer = setTimeout(function(){
+                    if(!refreshEnded){
+                        $('.processesContainer').empty().text("Refresh failed! Please make sure if the server is still online!");
+                        endRefresh();
+                    }
+                }, 10000);
+
+                var conn = ConnectionFactory.getConnection($('#valServerIP').text());
+                conn.send(JSON.stringify({ cmd: 'listProcess' }));  //have not consider about the situation of connection exception, wait :p
 
                 conn.addEventListener('message', refreshProcesses);
             });

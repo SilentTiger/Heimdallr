@@ -66,13 +66,13 @@
 </head>
 <body>
     <div class="header">
-        <header>Heimdallr</header>
+        <header>Heimdallr</header><button id="btnAdd">add</button>
         <svg id="btnAddWidget">
             <line x1="16" y1="2" x2="16" y2="30" />
             <line x1="2" y1="16" x2="30" y2="16" />
         </svg>
     </div>
-    <div class="gridster">
+    <div id="gridster" class="gridster" style="overflow:auto">
         <ul></ul>
     </div>
 
@@ -84,7 +84,7 @@
     </div>
 
 
-    <div id="dlgNewMornitoring" class="dialog" style="">
+    <div id="dlgNewMornitoring" class="dialog">
         <div class="stepDialog">
             <div class="stepPanel" step="1" style="left:0">
                 <div class="stepPanel_title_bar">
@@ -122,7 +122,7 @@
                 </div>
                 <div class="stepPanel_container">
                     <div class="step2Content">
-                        <input id="txtIP" type="text" placeholder="eg:196.21.10.51:8685" value="10.51.5.28:8080">
+                        <input id="txtIP" type="text" placeholder="eg:196.21.10.51:8685" value="10.51.5.20:8080">
                         <span id="btnAddIP" class="icon-plus"></span>
                         <span id="icnConnection" class="icon-spinner icon-spin" style="display:none"></span>
                     </div>
@@ -145,6 +145,64 @@
     <script src="js/jquery-2.1.0.min.js"></script>
     <script src="js/jquery.gridster.js"></script>
     <script src="js/common.js"></script>
+    <script type="text/javascript">
+        $.Gridster.resize_widget_dimensions = function(options) {
+            if (options.widget_margins) {
+                this.options.widget_margins = options.widget_margins;
+            }
+     
+            if (options.widget_base_dimensions) {
+                 this.options.widget_base_dimensions = options.widget_base_dimensions;
+            }
+     
+            this.min_widget_width  = (this.options.widget_margins[0] * 2) + this.options.widget_base_dimensions[0];
+            this.min_widget_height = (this.options.widget_margins[1] * 2) + this.options.widget_base_dimensions[1];
+     
+            var serializedGrid = this.serialize();
+            this.$widgets.each($.proxy(function(i, widget) {
+                var $widget = $(widget);
+                this.resize_widget($widget);
+            }, this));
+     
+            this.generate_grid_and_stylesheet();
+            this.get_widgets_from_DOM();
+            this.set_dom_grid_height();
+     
+            return false;
+        };
+    </script>
+    <script type="text/javascript">
+        var widgetBaseDimensions = [100, 100],
+            widgetMargins = [10, 10];
+
+        var calWidgetDimensions = function calWidgetDimensions(){
+            var p = $('#gridster');
+            var w = parseInt((p.width() - 77) / 3);
+            var h = parseInt(w / 4 * 3);
+            widgetBaseDimensions = [w, h];
+            widgetMargins = [10, 10];
+        };
+        calWidgetDimensions();
+
+        var gridster = $(".gridster ul").gridster({
+            widget_base_dimensions: widgetBaseDimensions,
+            widget_margins: widgetMargins
+        }).data('gridster');
+
+
+        $(window).bind('resize', function(){
+            calWidgetDimensions();
+            gridster.resize_widget_dimensions({
+                widget_base_dimensions: widgetBaseDimensions,
+                widget_margins: widgetMargins
+            });
+        });
+
+        $('#btnAdd').click(function(){
+            gridster.add_widget("<li style='background-color:rgb(97, 97, 97)'>0</li>", 1, 1, 1, 1);
+        });
+    </script>
+
     <script type="text/javascript">
         //home page logic & event
         (function () {
@@ -354,6 +412,21 @@
                 $('#valTarget').text($(this).find('.pcsPID').text());
                 back2Step1();
             });
+            var scrollLeftValue = $(this).scrollLeft();
+            var mousewheelEnd = true;
+            $('.processesContainer').bind('mousewheel', function(){
+                mousewheelEnd = false;
+                $(this).stop();
+                scrollLeftValue -= event.wheelDelta / 120 * 100;
+                $(this).animate({ scrollLeft: scrollLeftValue + 'px'}, 300, function(){
+                    mousewheelEnd = true;
+                });
+            });
+            $('.processesContainer').bind('scroll', function(){
+                if(mousewheelEnd){
+                    scrollLeftValue = $(this).scrollLeft();
+                }
+            });
         })();
 
         function startListen() {
@@ -363,7 +436,6 @@
         function stopListen() {
             ws.send(JSON.stringify({ cmd: 'removeMonitoringTarget', data: { id: pid.value } }));
         }
-
     </script>
 </body>
 </html>

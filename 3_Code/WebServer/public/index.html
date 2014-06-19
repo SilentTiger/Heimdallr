@@ -251,7 +251,7 @@
             $('#dlgNewMornitoring').find(".stepPanel[step=1] .stepPanel_title_button").eq(1).bind("click", function () {
                 if($('#valServerIP').text() === "" || $('#valTarget').text() === "") return;
 
-                var ws = ConnectionFactory.getConnection($('#valServerIP').text());
+                var ws = HUB.getConnection($('#valServerIP').text());
                 ws.send(JSON.stringify({ cmd: 'addMonitoringTarget',
                                         data: {
                                             id: $('#valTarget').text(),
@@ -327,7 +327,7 @@
 
             var connect = function (addr) {
                 ShowBusy();
-                var connection = ConnectionFactory.getConnection(addr);
+                var connection = HUB.connect(addr);
                 var showWaitingTimeout = setTimeout(function () {
                     $('#txtIP').attr('disabled', 'disabled');
                     $('#btnAddIP').css('display', 'none');
@@ -381,6 +381,7 @@
                     $("#btnRefreshProcesses").removeClass('icon-spin');
                 };
                 var refreshProcesses = function refreshProcesses(msgEvent){
+                    console.log(1);
                     if(!msgEvent || !msgEvent.data) return;
                     var msgData = eval('(' + msgEvent.data + ')');
                     if(msgData.cmd !== 'listProcess') return;
@@ -414,10 +415,9 @@
                     }
                 }, 10000);
 
-                var conn = ConnectionFactory.getConnection($('#valServerIP').text());
-                conn.send(JSON.stringify({ cmd: 'listProcess' }));  //have not consider about the situation of connection exception, wait :p
-
+                var conn = HUB.getConnection($('#valServerIP').text());
                 conn.addEventListener('message', refreshProcesses);
+                conn.send(JSON.stringify({ cmd: 'listProcess' }));  //have not consider about the situation of connection exception, wait :p
             });
 
             $('#txtSearchPcs').bind('input', function(){

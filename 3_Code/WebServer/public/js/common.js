@@ -21,9 +21,9 @@ function HideBusy(){
     setTimeout(function () { $(".busy_mask").remove();}, 300);
 }
 
-var ConnectionFactory = (function () {
+var HUB = (function(){
     var connections = {};
-    var getConnection = function(uri) {
+    var connect = function(uri){
         if (!connections[uri]) {
             var con = new WebSocket("ws://" + uri);
             con.addEventListener("close", function() {
@@ -33,7 +33,15 @@ var ConnectionFactory = (function () {
         }
         return connections[uri];
     };
-    return {
-        getConnection: getConnection
+    var getConnection = function(uri){
+        return connections[uri];
     };
+    var addChart = function(){
+
+    };
+    
+    return {
+        connect: connect,
+        getConnection: getConnection
+    }
 })();

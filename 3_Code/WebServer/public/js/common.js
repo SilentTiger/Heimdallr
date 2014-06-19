@@ -45,3 +45,47 @@ var HUB = (function(){
         getConnection: getConnection
     }
 })();
+
+var DataStorage = (function(){
+    var data = {};
+    var processData = function(data){
+
+    };
+    var startRecord = function(targetId){
+
+    };
+    var stopRecord = function(targetId){
+
+    };
+    var startRecordAll = function(){
+
+    };
+    var stopRecordaLL = function(){
+
+    };
+    var addTarget = function(targetId){
+
+    };
+
+    return {
+        processData: processData,
+        startRecord: startRecord,
+        stopRecord: stopRecord,
+        startRecordAll: startRecordAll,
+        stopRecordaLL: stopRecordaLL,
+        addTarget: addTarget
+    };
+})();
+
+var ChartManager = (function(){
+    var processData = function(data){
+
+    };
+    var addChart = function(){
+
+    };
+    return {
+        processData: processData,
+        addChart: addChart
+    };
+})();

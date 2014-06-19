@@ -19,14 +19,11 @@ var Monitor = (function(){
 		for(var i in clients){
 			var msg = {
 				cmd: "monitorData",
-				data: [
-					{id: '', data:'', time: ''},
-					{id: '', data:'', time: ''}
-				],
+				data: [],
 				time: new Date()
 			};
 			for(var j in clients[i].intervalList){
-				if(tock % clients[i].intervalList[j].interval !== 0) continue;
+				if(tock % clients[i].intervalList[j] !== 0) continue;
 				msg.data.push({
 					id: j,
 					data: monitoringTargets[j].data,

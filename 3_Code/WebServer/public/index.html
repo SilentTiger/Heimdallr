@@ -3,7 +3,7 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Heimdallr</title>
-    <link href="./css/cssreset-min.css" rel="stylesheet" />
+    <!-- <link href="./css/cssreset-min.css" rel="stylesheet" /> -->
     <link href="./css/normalize.css" rel="stylesheet">
     <link href="./css/jquery.gridster.css" rel="stylesheet">
     <link href="./css/font-awesome.css" rel="stylesheet" />
@@ -144,6 +144,7 @@
 
     <script src="js/jquery-2.1.0.min.js"></script>
     <script src="js/jquery.gridster.js"></script>
+    <script src="js/highcharts.js"></script>
     <script src="js/common.js"></script>
     <script type="text/javascript">
         $.Gridster.resize_widget_dimensions = function(options) {
@@ -172,37 +173,58 @@
         };
     </script>
     <script type="text/javascript">
-        var widgetBaseDimensions = [100, 100],
-            widgetMargins = [10, 10];
+            var widgetBaseDimensions = [100, 100],
+                widgetMargins = [10, 10];
 
-        var calWidgetDimensions = function calWidgetDimensions(){
-            var p = $('#gridster');
-            var w = parseInt((p.width() - 77) / 3);
-            var h = parseInt(w / 4 * 3);
-            widgetBaseDimensions = [w, h];
-            widgetMargins = [10, 10];
-        };
-        calWidgetDimensions();
-
-        var gridster = $(".gridster ul").gridster({
-            widget_base_dimensions: widgetBaseDimensions,
-            widget_margins: widgetMargins
-        }).data('gridster');
-
-
-        $(window).bind('resize', function(){
+            var calWidgetDimensions = function calWidgetDimensions(widgetMargins){
+                var p = $('#gridster');
+                var w = parseInt((p.width() - 77) / 3);
+                var h = parseInt(w / 4 * 3);
+                widgetBaseDimensions = [w, h];
+                widgetMargins = [10, 10];
+            };
             calWidgetDimensions();
-            gridster.resize_widget_dimensions({
+
+            var gridster = $(".gridster ul").gridster({
                 widget_base_dimensions: widgetBaseDimensions,
                 widget_margins: widgetMargins
+            }).data('gridster');
+
+            $(window).bind('resize', function(){
+                calWidgetDimensions();
+                gridster.resize_widget_dimensions({
+                    widget_base_dimensions: widgetBaseDimensions,
+                    widget_margins: widgetMargins
+                });
             });
-        });
 
         $('#btnAdd').click(function(){
-            gridster.add_widget("<li style='background-color:rgb(97, 97, 97)'>0</li>", 1, 1, 1, 1);
+            gridster.add_widget("<li style='background-color:rgb(97, 97, 97)'><div id='testChart' style='height:100%'> </div></li>", 1, 1, 1, 1);
         });
     </script>
+    <script type="text/javascript">
+        function DataReceiver(targetId){
+            this.targetId = targetId;
+            var dataList = [];
+            if(typeof this.processData != "function"){
+                DataReceiver.prototype.processData = function(data){
 
+                };
+                DataReceiver.prototype.getAllData = function(){
+
+                };
+                DataReceiver.prototype.clearData = function(){
+
+                };
+                DataReceiver.prototype.recordStart = function(){
+
+                };
+                DataReceiver.prototype.recordStop = function(){
+
+                };
+            }
+        }
+    </script>
     <script type="text/javascript">
         //home page logic & event
         (function () {
@@ -361,7 +383,7 @@
                 var refreshProcesses = function refreshProcesses(msgEvent){
                     if(!msgEvent || !msgEvent.data) return;
                     var msgData = eval('(' + msgEvent.data + ')');
-                    if( msgData.id !== 'syscontrol' || msgData.cmd !== 'listProcess') return;
+                    if(msgData.cmd !== 'listProcess') return;
 
                     conn.removeEventListener('message', refreshProcesses);
                     var processList = msgData.data;

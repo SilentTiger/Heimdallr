@@ -2,10 +2,12 @@ var exec = require('child_process').exec;
 
 function MonitoringTarget(id) {
 	this.id = id;
+	this.data;
+	this.refreshTime;
+
 	this.listener = [];
 	this.interval = 0;
 	this.cmd = "";
-	this.formateData = function(data){return data;};
 	
 	var reg = new RegExp(/ +/g);
 	switch (id) {
@@ -70,17 +72,15 @@ function MonitoringTarget(id) {
 			if(error){console.log("monitoring target error: id[" + this.id + "]  cmd[" + this.cmd + "]" + (new Date() - 0));}
 			if(stderr){console.log("monitoring target stderr: id[" + this.id + "]  cmd[" + this.cmd + "]" + (new Date() - 0));}
 
-			var msg = JSON.stringify({id: this.id, data: this.formateData(stdout), time: new Date()});
-			for(var i = 0, l = this.listener.length; i < l; i++){
-				if (tock % this.listener[i].intervalList[this.id] !== 0) continue;
-				this.listener[i].send(msg);
-			}
+			this.refreshTime = new Date();
+			this.data = this.formateData(stdout);
 		};
 		MonitoringTarget.prototype.tick = function(tock) {
 			if (tock % this.interval !== 0) return;
 			var self = this;
 			exec(this.cmd, function(error, stdout, stderr){self.refreshCallback(error, stdout, stderr, tock);});
 		};
+		MonitoringTarget.prototype.formateData  = function(data){return data;};
 	}
 }
 

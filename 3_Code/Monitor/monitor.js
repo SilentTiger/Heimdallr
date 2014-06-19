@@ -8,12 +8,33 @@ var Monitor = (function(){
 	var serverStarted = false;
 	var interval = 1000;
 	var monitoringTargets = {};
+	var clients = {};
 	var tock = 0;
 	
 	var startTime;
 	function startClock(){
 		for(var i in monitoringTargets){
 			monitoringTargets[i].tick(tock);
+		}
+		for(var i in clients){
+			var msg = {
+				cmd: "monitorData",
+				data: [
+					{id: '', data:'', time: ''},
+					{id: '', data:'', time: ''}
+				],
+				time: new Date()
+			};
+			for(var j in clients[i].intervalList){
+				if(tock % clients[i].intervalList[j].interval !== 0) continue;
+				msg.data.push({
+					id: j,
+					data: monitoringTargets[j].data,
+					time: monitoringTargets[j].time
+				});
+			}
+			if(msg.data.length <= 0) continue;
+			clients[i].send(JSON.stringify(msg));
 		}
 		tock++;
 		var delay = startTime + interval * tock - new Date();
@@ -44,6 +65,7 @@ var Monitor = (function(){
             var client = new Client(connection);
             client.addEventListener('message', onMessage);
             client.addEventListener('close', onClose);
+            clients[client.id] = client;
         });
         startTime = new Date() - 0;
         startClock();
@@ -62,6 +84,7 @@ var Monitor = (function(){
 		var now = new Date();
 		console.log("socket close from " + sender.conn.remoteAddress + " at " + now.toString() + " | " + (now - 0), reasonCode, desc);
 		Monitor.removeMonitoringTarget(sender, {id:"all"});
+		delete clients[sender.id];
 	}
 
 	function addMonitoringTarget(client, data){
@@ -91,7 +114,7 @@ var Monitor = (function(){
 			for(var i = 1, l = temp.length - 1; i < l; i++){
 				processList.push([temp[i].substring(0, pidEnd), temp[i].substring(pidEnd + 1)]);
 			}
-			client.send(JSON.stringify({id: 'syscontrol', cmd: 'listProcess', data: processList, time: new Date()}));
+			client.send(JSON.stringify({cmd: 'listProcess', data: processList, time: new Date()}));
 		});
 	};
 

@@ -26,10 +26,13 @@ var HUB = (function(){
     var connect = function(uri){
         if (!connections[uri]) {
             var con = new WebSocket("ws://" + uri);
+            con.id = uri;
             con.addEventListener("close", function() {
                 delete connections[uri];
             });
             connections[uri] = con;
+            con.addEventListener('message', DataStorage.processData);
+            con.addEventListener('message', ChartManager.processData);
         }
         return connections[uri];
     };
@@ -48,23 +51,40 @@ var HUB = (function(){
 
 var DataStorage = (function(){
     var data = {};
+    var needRecord = {};
     var processData = function(data){
-
+        console.log("DataStorage", data);
     };
     var startRecord = function(targetId){
-
+        data[targetId] = data[targetId] ? data[targetId] : [];
+        needRecord[targetId] = true;
     };
     var stopRecord = function(targetId){
-
+        needRecord[targetId] = false;
     };
     var startRecordAll = function(){
-
+        for(var targetId in data){
+            needRecord[targetId] = true;
+        }
     };
-    var stopRecordaLL = function(){
-
+    var stopRecordAll = function(){
+        for(var targetId in data){
+            needRecord[targetId] = false;
+        }
+    };
+    var clearData = function(targetId){
+        data[targetId] = [];
+    };
+    var clearDataAll = function(){
+        for(var targetId in data){
+            data[targetId] = [];
+        }
     };
     var addTarget = function(targetId){
-
+        data[targetId] = [];
+    };
+    var delTarget = function(targetId){
+        delete data[targetId];
     };
 
     return {
@@ -72,8 +92,11 @@ var DataStorage = (function(){
         startRecord: startRecord,
         stopRecord: stopRecord,
         startRecordAll: startRecordAll,
-        stopRecordaLL: stopRecordaLL,
-        addTarget: addTarget
+        stopRecordAll: stopRecordAll,
+        clearData: clearData,
+        clearDataAll: clearDataAll,
+        addTarget: addTarget,
+        delTarget: delTarget
     };
 })();
 
@@ -81,7 +104,7 @@ var ChartManager = (function(){
     var processData = function(data){
 
     };
-    var addChart = function(){
+    var addChart = function(targetId, type){
 
     };
     return {

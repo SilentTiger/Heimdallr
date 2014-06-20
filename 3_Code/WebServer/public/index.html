@@ -197,33 +197,14 @@
                     widget_margins: widgetMargins
                 });
             });
-
-        $('#btnAdd').click(function(){
-            gridster.add_widget("<li style='background-color:rgb(97, 97, 97)'><div id='testChart' style='height:100%'> </div></li>", 1, 1, 1, 1);
+        Highcharts.setOptions({
+            global: {          
+                useUTC: false  
+            }    
         });
-    </script>
-    <script type="text/javascript">
-        function DataReceiver(targetId){
-            this.targetId = targetId;
-            var dataList = [];
-            if(typeof this.processData != "function"){
-                DataReceiver.prototype.processData = function(data){
+        $('#btnAdd').click(function(){
 
-                };
-                DataReceiver.prototype.getAllData = function(){
-
-                };
-                DataReceiver.prototype.clearData = function(){
-
-                };
-                DataReceiver.prototype.recordStart = function(){
-
-                };
-                DataReceiver.prototype.recordStop = function(){
-
-                };
-            }
-        }
+        });
     </script>
     <script type="text/javascript">
         //home page logic & event
@@ -254,9 +235,11 @@
                 var ws = HUB.getConnection($('#valServerIP').text());
                 ws.send(JSON.stringify({ cmd: 'addMonitoringTarget',
                                         data: {
-                                            id: $('#valTarget').text(),
+                                            id: $('#valTarget').text().trim(),
                                             interval: parseInt($('#dlgNewMornitoring').find(".stepPanel[step=1] .option .intervalOption > span:first ").text()) 
                                         }}));
+                DataStorage.addTarget(ws.id + "|" + $('#valTarget').text().trim());
+                ChartManager.addChart(ws.id + "|" + $('#valTarget').text().trim());
                 $('#dlgNewMornitoring').css({
                     "top": "",
                     "opacity": 0
@@ -381,7 +364,6 @@
                     $("#btnRefreshProcesses").removeClass('icon-spin');
                 };
                 var refreshProcesses = function refreshProcesses(msgEvent){
-                    console.log(1);
                     if(!msgEvent || !msgEvent.data) return;
                     var msgData = eval('(' + msgEvent.data + ')');
                     if(msgData.cmd !== 'listProcess') return;

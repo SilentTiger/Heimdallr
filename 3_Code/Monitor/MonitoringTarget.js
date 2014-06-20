@@ -18,9 +18,6 @@ function MonitoringTarget(id) {
 			break;
 		default:
 			this.cmd = "top -p " + this.id + " -n 1 -b";
-			this.formateData = function(data){
-				return data.split("\n")[7].trimLeft().trimRight().replace(reg, ',');
-			};
 			break;
 	}
 
@@ -80,7 +77,13 @@ function MonitoringTarget(id) {
 			var self = this;
 			exec(this.cmd, function(error, stdout, stderr){self.refreshCallback(error, stdout, stderr, tock);});
 		};
-		MonitoringTarget.prototype.formateData  = function(data){return data;};
+		MonitoringTarget.prototype.formateData  = function(data){
+			var tmpData = data.split("\n")[7].trim().replace(reg, ',').split(",");
+			return {
+				cpu: tmpData[8],
+				ram: tmpData[9],
+			};
+		};
 	}
 }
 
